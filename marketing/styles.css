@@ -240,9 +240,6 @@ a {
 .hero {
   padding: 5.5rem 0 4.5rem;
   border-bottom: 1px solid var(--border);
-}
-
-.hero-home {
   background: #000000;
 }
 
