@@ -79,8 +79,22 @@ export function ProjectsPage() {
     setDeletingId(project.id);
     setError(null);
     try {
-      const { error: deleteError } = await supabase.from("projects").delete().eq("id", project.id);
-      if (deleteError) throw deleteError;
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not signed in.");
+
+      const res = await fetch("/api/delete-project", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ project_id: project.id }),
+      });
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error || "Failed to delete project.");
+
       setProjects((prev) => prev?.filter((p) => p.id !== project.id) ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete project.");

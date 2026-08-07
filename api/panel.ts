@@ -58,6 +58,37 @@ async function uploadPanelImage(supabase: SupabaseClient, sourceUrl: string, bas
   return data.publicUrl;
 }
 
+const PANELS_BUCKET_PREFIX = "/storage/v1/object/public/panels/";
+
+// Regenerating a panel inserts a fresh row (see the insert below) rather
+// than updating in place, so older attempts for the same beat would
+// otherwise pile up as orphaned rows and blobs forever — nothing else ever
+// deletes them. Only called after a new panel finishes successfully, so a
+// failed regenerate never touches the still-good previous one.
+async function deleteStalePanels(supabase: SupabaseClient, beatId: string, keepPanelId: string): Promise<void> {
+  const { data: stale, error: staleError } = await supabase
+    .from("panels")
+    .select("id, image_url")
+    .eq("beat_id", beatId)
+    .neq("id", keepPanelId);
+  if (staleError || !stale || stale.length === 0) return;
+
+  const paths = stale
+    .map((p) => p.image_url as string | null)
+    .filter((url): url is string => !!url && url.includes(PANELS_BUCKET_PREFIX))
+    .map((url) => url.split(PANELS_BUCKET_PREFIX)[1]);
+  if (paths.length > 0) {
+    const { error: removeError } = await supabase.storage.from("panels").remove(paths);
+    if (removeError) console.error("failed to remove stale panel blobs", removeError);
+  }
+
+  const { error: deleteError } = await supabase
+    .from("panels")
+    .delete()
+    .in("id", stale.map((p) => p.id));
+  if (deleteError) console.error("failed to remove stale panel rows", deleteError);
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" });
@@ -190,6 +221,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (lookProfile.locked_seed === null) {
       await supabase.from("look_profiles").update({ locked_seed: seed }).eq("id", lookProfile.id);
     }
+
+    await deleteStalePanels(supabase, beatId, panel.id);
 
     res.status(200).json({ panel: updatedPanel });
   } catch (err) {
