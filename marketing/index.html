@@ -170,7 +170,7 @@
       <div class="grid-3">
         <div class="feature-card">
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
-          <h3>Three Real Directions</h3>
+          <h3>Real Directions</h3>
           <p>The generation step is built to force divergence, not just reword the same concept three ways.</p>
         </div>
         <div class="feature-card">
@@ -213,23 +213,45 @@
     (function () {
       var workflow = document.querySelector("[data-workflow]");
       if (!workflow) return;
-      var tabs = workflow.querySelectorAll(".workflow-tab");
+      var tabs = Array.prototype.slice.call(workflow.querySelectorAll(".workflow-tab"));
+      var CYCLE_MS = 6000;
+      var timer = null;
+      var autoAdvance = !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+      function activate(tab) {
+        var target = tab.getAttribute("data-tab");
+        tabs.forEach(function (t) {
+          var isActive = t === tab;
+          t.classList.toggle("is-active", isActive);
+          t.setAttribute("aria-selected", String(isActive));
+        });
+        workflow.querySelectorAll("[data-detail]").forEach(function (el) {
+          el.hidden = el.getAttribute("data-detail") !== target;
+        });
+        workflow.querySelectorAll("[data-mock]").forEach(function (el) {
+          el.hidden = el.getAttribute("data-mock") !== target;
+        });
+      }
+
+      function startTimer() {
+        if (!autoAdvance) return;
+        if (timer) clearInterval(timer);
+        timer = setInterval(function () {
+          var current = tabs.findIndex(function (t) {
+            return t.classList.contains("is-active");
+          });
+          activate(tabs[(current + 1) % tabs.length]);
+        }, CYCLE_MS);
+      }
+
       tabs.forEach(function (tab) {
         tab.addEventListener("click", function () {
-          var target = tab.getAttribute("data-tab");
-          tabs.forEach(function (t) {
-            var isActive = t === tab;
-            t.classList.toggle("is-active", isActive);
-            t.setAttribute("aria-selected", String(isActive));
-          });
-          workflow.querySelectorAll("[data-detail]").forEach(function (el) {
-            el.hidden = el.getAttribute("data-detail") !== target;
-          });
-          workflow.querySelectorAll("[data-mock]").forEach(function (el) {
-            el.hidden = el.getAttribute("data-mock") !== target;
-          });
+          activate(tab);
+          startTimer();
         });
       });
+
+      startTimer();
     })();
   </script>
 </body>
