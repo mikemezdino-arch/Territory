@@ -108,6 +108,14 @@ h3 {
   margin: 0 0 0.6rem;
 }
 
+.eyebrow-badge {
+  display: inline-block;
+  background: #1919e3;
+  color: #ffffff;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+}
+
 a {
   color: inherit;
 }
@@ -693,12 +701,6 @@ section {
 .feature-row p {
   max-width: 640px;
   margin-bottom: 0;
-}
-
-.feature-row .not-this {
-  margin-top: 0.75rem;
-  font-size: 0.85rem;
-  color: var(--text-tertiary);
 }
 
 /* Pricing */
