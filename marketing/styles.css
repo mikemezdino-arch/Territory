@@ -242,6 +242,10 @@ a {
   border-bottom: 1px solid var(--border);
 }
 
+.hero-home {
+  background: #000000;
+}
+
 .hero .wrap {
   max-width: 760px;
   text-align: center;
