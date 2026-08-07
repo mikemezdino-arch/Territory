@@ -100,20 +100,16 @@ h3 {
 }
 
 .eyebrow {
+  display: inline-block;
   font-family: var(--font-button);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.75rem;
-  color: var(--text-tertiary);
-  margin: 0 0 0.6rem;
-}
-
-.eyebrow-badge {
-  display: inline-block;
   background: #1919e3;
   color: #ffffff;
   padding: 0.35rem 0.9rem;
   border-radius: 999px;
+  margin: 0 0 0.6rem;
 }
 
 a {
