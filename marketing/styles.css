@@ -259,6 +259,10 @@ a {
   margin: 0 auto 2rem;
 }
 
+.hero p.lede.lede-wide {
+  max-width: 680px;
+}
+
 .hero-actions {
   display: flex;
   gap: 0.85rem;
