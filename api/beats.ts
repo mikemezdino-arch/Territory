@@ -147,6 +147,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       look_profile: {
         style_description: lookProfile.style_description,
         palette: lookProfile.palette,
+        palette_colors: lookProfile.palette_colors,
         lighting_rules: lookProfile.lighting_rules,
         camera_grammar: lookProfile.camera_grammar,
         cast_json: lookProfile.cast_json,

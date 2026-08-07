@@ -63,6 +63,7 @@ export interface DbLookProfile {
   territory_id: string;
   style_description: string;
   palette: string;
+  palette_colors: string[];
   lighting_rules: string | null;
   camera_grammar: string | null;
   cast_json: CastMember[];
@@ -120,10 +121,15 @@ export const FORMAT_BEAT_COUNT: Record<string, number> = {
 export function buildLookProfileBlock(profile: {
   style_description: string;
   palette: string;
+  palette_colors?: string[] | null;
   lighting_rules?: string | null;
   camera_grammar?: string | null;
 }): string {
-  return `STYLE: ${profile.style_description}. PALETTE: ${profile.palette}. LIGHTING: ${profile.lighting_rules || "none specified"}. CAMERA: ${profile.camera_grammar || "none specified"}. Storyboard panel, 16:9, cinematic composition, no text or captions in image. ---`;
+  const hexAnchor =
+    profile.palette_colors && profile.palette_colors.length > 0
+      ? ` Primary hex colors: ${profile.palette_colors.join(", ")}.`
+      : "";
+  return `STYLE: ${profile.style_description}. PALETTE: ${profile.palette}.${hexAnchor} LIGHTING: ${profile.lighting_rules || "none specified"}. CAMERA: ${profile.camera_grammar || "none specified"}. Storyboard panel, 16:9, cinematic composition, no text or captions in image. ---`;
 }
 
 export const DEMO_PROJECT_TITLE = "Embr (Demo)";

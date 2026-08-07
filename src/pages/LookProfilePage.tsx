@@ -6,6 +6,8 @@ import { ImageUploadField } from "../components/ImageUploadField";
 import type { CastMember, DbProject, DbTerritory } from "../types";
 
 const MAX_CAST_MEMBERS = 4;
+const MAX_PALETTE_COLORS = 6;
+const DEFAULT_PALETTE_COLOR = "#e7eaf1";
 
 interface CastMemberState extends CastMember {
   uploading: boolean;
@@ -27,6 +29,7 @@ export function LookProfilePage() {
 
   const [styleDescription, setStyleDescription] = useState("");
   const [palette, setPalette] = useState("");
+  const [paletteColors, setPaletteColors] = useState<string[]>([]);
   const [lightingRules, setLightingRules] = useState("");
   const [cameraGrammar, setCameraGrammar] = useState("");
   const [castMembers, setCastMembers] = useState<CastMemberState[]>([emptyCastMember()]);
@@ -82,6 +85,7 @@ export function LookProfilePage() {
       if (profileData) {
         setStyleDescription(profileData.style_description ?? "");
         setPalette(profileData.palette ?? "");
+        setPaletteColors((profileData.palette_colors as string[] | null) ?? []);
         setLightingRules(profileData.lighting_rules ?? "");
         setCameraGrammar(profileData.camera_grammar ?? "");
         setProductRefUrl(profileData.product_ref_url ?? "");
@@ -181,6 +185,18 @@ export function LookProfilePage() {
     }
   }
 
+  function addPaletteColor() {
+    setPaletteColors((prev) => (prev.length < MAX_PALETTE_COLORS ? [...prev, DEFAULT_PALETTE_COLOR] : prev));
+  }
+
+  function removePaletteColor(index: number) {
+    setPaletteColors((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function updatePaletteColor(index: number, value: string) {
+    setPaletteColors((prev) => prev.map((c, i) => (i === index ? value : c)));
+  }
+
   function addCastMember() {
     setCastMembers((prev) => (prev.length < MAX_CAST_MEMBERS ? [...prev, emptyCastMember()] : prev));
   }
@@ -222,6 +238,7 @@ export function LookProfilePage() {
             territory_id: territory.id,
             style_description: styleDescription,
             palette,
+            palette_colors: paletteColors,
             lighting_rules: lightingRules || null,
             camera_grammar: cameraGrammar || null,
             cast_json: cast,
@@ -323,6 +340,35 @@ export function LookProfilePage() {
               onChange={(e) => setPalette(e.target.value)}
               placeholder="e.g. amber and teal, no pure white"
             />
+          </div>
+
+          <div className="field">
+            <label>Palette Colors ({paletteColors.length}/{MAX_PALETTE_COLORS})</label>
+            <div className="palette-color-row">
+              {paletteColors.map((color, i) => (
+                <div className="palette-color-swatch" key={i}>
+                  <input
+                    type="color"
+                    aria-label={`Palette color ${i + 1}`}
+                    value={color}
+                    onChange={(e) => updatePaletteColor(i, e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="palette-color-remove"
+                    aria-label={`Remove palette color ${i + 1}`}
+                    onClick={() => removePaletteColor(i)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+              {paletteColors.length < MAX_PALETTE_COLORS && (
+                <button type="button" className="palette-color-add" onClick={addPaletteColor}>
+                  + Add color
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="field">

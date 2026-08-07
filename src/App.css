@@ -484,6 +484,65 @@
   background: var(--bg-surface-alt);
 }
 
+.palette-color-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.palette-color-swatch {
+  position: relative;
+  width: 36px;
+  height: 36px;
+}
+
+.palette-color-swatch input[type="color"] {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+}
+
+.palette-color-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 16px;
+  height: 16px;
+  line-height: 14px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--bg-page);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.palette-color-remove:hover {
+  color: var(--danger-text);
+  border-color: var(--danger-text);
+}
+
+.palette-color-add {
+  align-self: center;
+  background: none;
+  border: 1px dashed var(--border-strong);
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.palette-color-add:hover {
+  border-style: solid;
+}
+
 .cast-row input[type="text"],
 .cast-row textarea {
   font-size: inherit;
