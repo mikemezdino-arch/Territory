@@ -187,6 +187,19 @@
   color: var(--text-primary);
 }
 
+.field-label-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.field-hint {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--text-tertiary);
+}
+
 .field input[type="text"],
 .field textarea {
   font-size: inherit;
@@ -525,7 +538,7 @@
 }
 
 .palette-color-hex {
-  width: 74px;
+  width: 92px;
   font-size: inherit;
   font-family: monospace;
   padding: 0.3rem 0.4rem;

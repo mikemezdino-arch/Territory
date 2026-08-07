@@ -125,11 +125,14 @@ export function buildLookProfileBlock(profile: {
   lighting_rules?: string | null;
   camera_grammar?: string | null;
 }): string {
-  const hexAnchor =
-    profile.palette_colors && profile.palette_colors.length > 0
-      ? ` Primary hex colors: ${profile.palette_colors.join(", ")}.`
-      : "";
-  return `STYLE: ${profile.style_description}. PALETTE: ${profile.palette}.${hexAnchor} LIGHTING: ${profile.lighting_rules || "none specified"}. CAMERA: ${profile.camera_grammar || "none specified"}. Storyboard panel, 16:9, cinematic composition, no text or captions in image. ---`;
+  // `palette` (free text) predates the color-swatch picker and is kept only
+  // for older look profiles saved before palette_colors existed; new saves
+  // send an empty string here since the swatches are now the single source
+  // of truth. Join whichever pieces are actually present so an empty
+  // palette never produces a dangling "PALETTE: ." in the prompt.
+  const hexList = profile.palette_colors && profile.palette_colors.length > 0 ? profile.palette_colors.join(", ") : null;
+  const paletteSegment = [profile.palette.trim() || null, hexList].filter(Boolean).join(", ") || "unspecified";
+  return `STYLE: ${profile.style_description}. PALETTE: ${paletteSegment}. LIGHTING: ${profile.lighting_rules || "none specified"}. CAMERA: ${profile.camera_grammar || "none specified"}. Storyboard panel, 16:9, cinematic composition, no text or captions in image. ---`;
 }
 
 export const DEMO_PROJECT_TITLE = "Embr (Demo)";

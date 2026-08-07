@@ -28,7 +28,6 @@ export function LookProfilePage() {
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const [styleDescription, setStyleDescription] = useState("");
-  const [palette, setPalette] = useState("");
   const [paletteColors, setPaletteColors] = useState<string[]>([]);
   const [lightingRules, setLightingRules] = useState("");
   const [cameraGrammar, setCameraGrammar] = useState("");
@@ -84,7 +83,6 @@ export function LookProfilePage() {
       if (cancelled) return;
       if (profileData) {
         setStyleDescription(profileData.style_description ?? "");
-        setPalette(profileData.palette ?? "");
         setPaletteColors((profileData.palette_colors as string[] | null) ?? []);
         setLightingRules(profileData.lighting_rules ?? "");
         setCameraGrammar(profileData.camera_grammar ?? "");
@@ -237,7 +235,7 @@ export function LookProfilePage() {
           {
             territory_id: territory.id,
             style_description: styleDescription,
-            palette,
+            palette: "",
             palette_colors: paletteColors,
             lighting_rules: lightingRules || null,
             camera_grammar: cameraGrammar || null,
@@ -330,20 +328,10 @@ export function LookProfilePage() {
           </div>
 
           <div className="field">
-            <label htmlFor="palette">Palette</label>
-            <input
-              id="palette"
-              type="text"
-              value={palette}
-              maxLength={1500}
-              required
-              onChange={(e) => setPalette(e.target.value)}
-              placeholder="e.g. amber and teal, no pure white"
-            />
-          </div>
-
-          <div className="field">
-            <label>Palette Colors ({paletteColors.length}/{MAX_PALETTE_COLORS})</label>
+            <div className="field-label-row">
+              <label>Palette Colors ({paletteColors.length}/{MAX_PALETTE_COLORS})</label>
+              <span className="field-hint">Click a swatch for a color slider, or type a hex code</span>
+            </div>
             <div className="palette-color-row">
               {paletteColors.map((color, i) => (
                 <div className="palette-color-item" key={i}>
