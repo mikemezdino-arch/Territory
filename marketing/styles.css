@@ -383,66 +383,116 @@ a {
   border-color: transparent;
 }
 
-/* Mock: territories */
+/* Mock: territories — a faithful recreation of the real TerritoryCard
+   (src/App.css .territory-card and friends), down to matching class
+   names' visual output, not just "inspired by." */
 
 .mock-territories {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.25rem;
 }
 
-.mock-territory-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.mock-territory-card.is-selected {
-  border-color: var(--border-strong);
-}
-
-.mock-territory-head {
+.mock-app-header {
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  min-width: 140px;
 }
 
-.mock-territory-name {
-  font-family: var(--font-subheading);
-  font-size: 0.92rem;
+.mock-app-title {
+  font-family: var(--font-header);
+  font-size: 1.4rem;
   color: var(--text-primary);
+  margin: 0;
 }
 
-.mock-badge {
-  font-size: 0.7rem;
-  color: var(--text-tertiary);
-  font-family: var(--font-body);
-}
-
-.mock-territory-copy {
-  flex: 1 1 220px;
-  font-size: 0.82rem;
+.mock-app-subtitle {
+  font-size: 0.85rem;
   color: var(--text-secondary);
   margin: 0;
 }
 
-.mock-chip-row {
-  display: flex;
-  gap: 0.35rem;
+.mock-real-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-align: left;
 }
 
-.mock-chip {
-  font-size: 0.7rem;
-  padding: 0.2rem 0.55rem;
+.mock-real-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.mock-real-name {
+  font-family: var(--font-subheading);
+  font-size: 1.15rem;
+  color: var(--text-primary);
+}
+
+.mock-real-badge {
+  font-size: 0.75rem;
+  font-family: var(--font-button);
+  padding: 0.25rem 0.6rem;
   border-radius: 999px;
+  white-space: nowrap;
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+.mock-real-concept {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+}
+
+.mock-real-tonal {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.mock-real-chip {
   background: var(--bg-surface-alt);
-  color: var(--text-tertiary);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+}
+
+.mock-real-structure {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.9rem;
+}
+
+.mock-real-expand {
+  display: inline-block;
+  border: 1px dashed var(--border-strong);
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.9rem;
+}
+
+.mock-real-cta {
+  display: block;
+  text-align: center;
+  padding: 0.7rem 1rem;
+  background: var(--accent-btn-bg);
+  color: var(--accent-btn-text);
+  border-radius: 8px;
+  font-family: var(--font-button);
+  font-size: 0.95rem;
 }
 
 /* Mock: look profile */
@@ -482,6 +532,16 @@ a {
   border: 1px solid var(--border-strong);
 }
 
+.mock-swatch-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border-style: dashed;
+  color: var(--text-tertiary);
+  font-family: var(--font-button);
+}
+
 .mock-style-text {
   font-size: 0.85rem;
   color: var(--text-secondary);
@@ -497,7 +557,9 @@ a {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: var(--bg-surface-alt);
+  background-color: var(--bg-surface-alt);
+  background-size: 400% 400%;
+  background-repeat: no-repeat;
   border: 1px solid var(--border-strong);
 }
 
@@ -542,6 +604,13 @@ a {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+}
+
+.mock-board-image {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  display: block;
 }
 
 /* Sections */
