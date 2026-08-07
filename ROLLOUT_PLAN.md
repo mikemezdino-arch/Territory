@@ -203,13 +203,39 @@ Vercel; vendor dashboards for Anthropic, fal.ai, ElevenLabs, Supabase, Vercel.
   fine — just skip turning on its proxy/WAF.
 - Error tracking (Sentry or equivalent) on both the client and `/api/*`
 - Per-vendor spend alerts (Anthropic, fal.ai, ElevenLabs) before paid
-  signups open, so a bug can't produce a surprise bill
+  signups open, so a bug can't produce a surprise bill — see below for
+  what each vendor actually offers, checked live August 2026
 - Terms of Service + Privacy Policy, naming the LLC as the contracting
   party (see Operations — write these after the entity exists)
 - Confirm Supabase's 7-day Pro backups are actually restorable, not just enabled
 
 **Checkpoint** — deleting a project actually frees its Storage; a
 simulated vendor cost spike pages you before it drains the month's margin.
+
+### Per-vendor spend alerts — what each vendor actually offers
+
+Checked live against each vendor's own docs, not assumed from memory —
+worth re-checking at setup time in case something's shipped since.
+
+- **Anthropic Console** (console.anthropic.com) — supports both a
+  workspace-level spend limit and a per-API-key spend limit, plus
+  configurable spend-threshold alert emails. Set both: the workspace
+  limit as the hard backstop, a per-key limit on Territory's production
+  key specifically so a leaked key or a runaway loop can't spend past it.
+- **fal.ai** (fal.ai/dashboard/billing) — the dashboard shows real-time
+  spend, invoices, and usage line items, but nothing in fal's own docs
+  confirms a built-in spend-limit-alert feature as of this check. Until
+  that changes, treat this vendor's real backstop as already built: the
+  app's own per-user daily image-call cap already bounds worst-case
+  exposure (a bug can burn at most `image_calls_limit × active users ×
+  ~$0.03`/day, not an unbounded amount) — check the billing dashboard
+  manually on a recurring basis (weekly is reasonable pre-launch) rather
+  than relying on a vendor alert that may not exist yet.
+- **ElevenLabs** — Workspace settings → Groups → Manage Usage Limit: create
+  one billing group covering the account and set a credit-usage quota.
+  This is a hard cap that resets each billing cycle, not just an alert —
+  stronger than what Anthropic or fal.ai offer, so worth setting even
+  though it means generation stops rather than just paging you.
 
 ---
 
