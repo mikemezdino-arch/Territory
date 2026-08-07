@@ -512,6 +512,12 @@ needs to be redone by waiting.
   webhook writes rows to it, so doing this early is harmless and saves a
   step later.
 
+**Not blocked at all — needed for the Look Profile color-palette feature**
+- ⬜ Run `supabase/migrations/0012_look_profile_palette_colors.sql` in the
+  Supabase SQL Editor. Without it, the palette-color swatch UI on
+  `/app/p/:id/t/:territoryId/look` will fail to save (the `palette_colors`
+  column won't exist yet).
+
 **Genuinely blocked on: LLC processed + EIN issued** (Stripe accounts
 under a business name need the EIN; opening it personally now just means
 redoing it later, so it's worth the wait)
