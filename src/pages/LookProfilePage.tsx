@@ -346,11 +346,21 @@ export function LookProfilePage() {
             <label>Palette Colors ({paletteColors.length}/{MAX_PALETTE_COLORS})</label>
             <div className="palette-color-row">
               {paletteColors.map((color, i) => (
-                <div className="palette-color-swatch" key={i}>
+                <div className="palette-color-item" key={i}>
                   <input
                     type="color"
+                    className="palette-color-swatch"
                     aria-label={`Palette color ${i + 1}`}
+                    value={/^#[0-9a-fA-F]{6}$/.test(color) ? color : "#000000"}
+                    onChange={(e) => updatePaletteColor(i, e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    className="palette-color-hex"
+                    aria-label={`Palette color ${i + 1} hex code`}
                     value={color}
+                    maxLength={7}
+                    placeholder="#rrggbb"
                     onChange={(e) => updatePaletteColor(i, e.target.value)}
                   />
                   <button
@@ -418,6 +428,7 @@ export function LookProfilePage() {
                   uploading={cast.uploading}
                   error={cast.error}
                   onFileSelected={(file) => handleCastFileSelected(i, file)}
+                  circular
                 />
                 <button type="button" className="remove-btn" onClick={() => removeCastMember(i)}>
                   Remove cast member

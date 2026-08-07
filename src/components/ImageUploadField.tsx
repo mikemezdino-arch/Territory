@@ -4,13 +4,16 @@ interface ImageUploadFieldProps {
   uploading: boolean;
   error?: string | null;
   onFileSelected: (file: File) => void;
+  circular?: boolean;
 }
 
-export function ImageUploadField({ label, imageUrl, uploading, error, onFileSelected }: ImageUploadFieldProps) {
+export function ImageUploadField({ label, imageUrl, uploading, error, onFileSelected, circular }: ImageUploadFieldProps) {
   return (
     <div className="field image-upload-field">
       <label>{label}</label>
-      {imageUrl && <img src={imageUrl} alt={label} className="image-thumb" />}
+      {imageUrl && (
+        <img src={imageUrl} alt={label} className={circular ? "image-thumb image-thumb-circle" : "image-thumb"} />
+      )}
       <input
         type="file"
         accept="image/jpeg,image/png,image/webp"
