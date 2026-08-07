@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "territory-dev",
+      "runtimeExecutable": "/home/oem/Documents/Territory Build/.claude/dev-server.sh",
+      "runtimeArgs": [],
+      "port": 5173
+    }
+  ]
+}

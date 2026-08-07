@@ -1,0 +1,124 @@
+@font-face {
+  font-family: "Archivo Condensed ExtraBold";
+  src: url("/fonts/Archivo_Condensed-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo Bold";
+  src: url("/fonts/Archivo-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Archivo Medium";
+  src: url("/fonts/Archivo-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Dark slate/navy theme — the app's fixed look, not a prefers-color-scheme
+     fallback. */
+  --bg-page: #161b26;
+  --bg-surface: #1f2635;
+  --bg-surface-alt: #262f42;
+  --bg-input: #12161f;
+
+  --border: #313b52;
+  --border-strong: #465071;
+
+  --text-primary: #e7eaf1;
+  --text-secondary: #9aa3b8;
+  --text-tertiary: #6b7488;
+
+  --accent-btn-bg: #e7eaf1;
+  --accent-btn-text: #161b26;
+
+  --danger-bg: #3a1f22;
+  --danger-border: #6b3a3f;
+  --danger-text: #ff9d95;
+
+  --success-bg: #16301f;
+  --success-text: #7bd99a;
+  --warning-bg: #332a12;
+  --warning-text: #e8c05f;
+  --risk-bg: #3a1f1f;
+  --risk-text: #f2938a;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-header: "Archivo Condensed ExtraBold", var(--sans);
+  --font-button: "Archivo Bold", var(--sans);
+  --font-subheading: "Archivo Bold", var(--sans);
+  --font-input: "Archivo Medium", var(--sans);
+  --font-body: "Archivo Medium", var(--sans);
+
+  font: 16px/145% var(--font-body);
+  color-scheme: dark;
+  color: var(--text-primary);
+  background: var(--bg-page);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-transform: capitalize;
+}
+
+h1 {
+  font-family: var(--font-header);
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-subheading);
+}
+
+button,
+.primary-btn,
+.choose-btn {
+  font-family: var(--font-button);
+  text-transform: capitalize;
+}
+
+.sidebar-link {
+  font-family: var(--font-button);
+}
+
+input,
+textarea,
+select {
+  font-family: var(--font-input);
+}
