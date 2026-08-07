@@ -51,34 +51,128 @@
         <p class="eyebrow">The Workflow</p>
         <h2>From Brief To Boards, In One Sitting</h2>
       </div>
-      <div class="grid-3">
-        <div class="step-card">
-          <p class="step-index">01</p>
-          <h3>Generate Three Territories</h3>
-          <p>
-            Structured brief in, three deliberately different creative
-            directions out — not three variations on the same idea. Don't
-            like the fit? Write your own and Territory analyzes it the same
-            way.
-          </p>
+
+      <div class="workflow" data-workflow>
+        <div class="workflow-tabs" role="tablist">
+          <button type="button" class="workflow-tab is-active" role="tab" aria-selected="true" data-tab="territories">Generate Territories</button>
+          <button type="button" class="workflow-tab" role="tab" aria-selected="false" data-tab="look">Lock A Look</button>
+          <button type="button" class="workflow-tab" role="tab" aria-selected="false" data-tab="board">Export A Board</button>
         </div>
-        <div class="step-card">
-          <p class="step-index">02</p>
-          <h3>Lock A Look Profile</h3>
-          <p>
-            Pick a territory and lock its style, cast, and palette into a
-            reusable look profile. Every panel you generate after this
-            point stays visually consistent by construction, not by luck.
-          </p>
-        </div>
-        <div class="step-card">
-          <p class="step-index">03</p>
-          <h3>Export A Timed Animatic</h3>
-          <p>
-            Beat sheet, storyboard panels, scratch voiceover, and a music
-            bed — assembled into a rough-cut board-o-matic and a pitch PDF,
-            ready to send.
-          </p>
+
+        <div class="workflow-panel">
+          <div class="workflow-detail">
+            <div class="workflow-detail-body" data-detail="territories">
+              <h3>Three Directions, Not Three Variations</h3>
+              <p>
+                Structured brief in, three deliberately different creative
+                directions out. Choose the one that's right, or write your
+                own and Territory analyzes it the same way.
+              </p>
+              <a class="workflow-link" href="features.html">See how generation works <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="workflow-detail-body" data-detail="look" hidden>
+              <h3>One Look, Locked For The Whole Board</h3>
+              <p>
+                Pick a territory and lock its style, cast, and palette into
+                a reusable look profile. Every panel generated after this
+                point stays visually consistent by construction, not by luck.
+              </p>
+              <a class="workflow-link" href="features.html">See the look profile <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="workflow-detail-body" data-detail="board" hidden>
+              <h3>A Timed Board Ready To Pitch</h3>
+              <p>
+                Beat sheet, storyboard panels, scratch voiceover, and a
+                music bed — assembled into a rough-cut board-o-matic and a
+                pitch PDF, ready to send.
+              </p>
+              <a class="workflow-link" href="features.html">See export options <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+
+          <div class="workflow-visual">
+            <!-- Stylized recreations of the real screens, not literal screenshots. -->
+            <div class="mock mock-territories" data-mock="territories">
+              <div class="mock-territory-card is-selected">
+                <div class="mock-territory-head">
+                  <span class="mock-territory-name">Quiet Confidence</span>
+                  <span class="mock-badge mock-badge-safe">Safe · 2/5</span>
+                </div>
+                <p class="mock-territory-copy">Understated proof over hard sell — the product speaks by what it lets you skip.</p>
+                <div class="mock-chip-row">
+                  <span class="mock-chip">composed</span>
+                  <span class="mock-chip">earned</span>
+                </div>
+                <span class="mock-pill mock-pill-active">Selected</span>
+              </div>
+              <div class="mock-territory-card">
+                <div class="mock-territory-head">
+                  <span class="mock-territory-name">Kinetic Proof</span>
+                  <span class="mock-badge mock-badge-balanced">Balanced · 3/5</span>
+                </div>
+                <p class="mock-territory-copy">Motion-forward, product mid-action — built for a scroll that doesn't stop.</p>
+                <div class="mock-chip-row">
+                  <span class="mock-chip">kinetic</span>
+                  <span class="mock-chip">bold</span>
+                </div>
+                <span class="mock-pill">Choose</span>
+              </div>
+              <div class="mock-territory-card">
+                <div class="mock-territory-head">
+                  <span class="mock-territory-name">Open Invitation</span>
+                  <span class="mock-badge mock-badge-swing">Big swing · 5/5</span>
+                </div>
+                <p class="mock-territory-copy">Deadpan humor, direct address — the riskiest of the three, and the most memorable.</p>
+                <div class="mock-chip-row">
+                  <span class="mock-chip">wry</span>
+                  <span class="mock-chip">direct</span>
+                </div>
+                <span class="mock-pill">Choose</span>
+              </div>
+            </div>
+
+            <div class="mock mock-look" data-mock="look" hidden>
+              <div class="mock-look-row">
+                <span class="mock-label">Palette</span>
+                <div class="mock-swatches">
+                  <span class="mock-swatch" style="background:#e6c9a8"></span>
+                  <span class="mock-swatch" style="background:#b8895f"></span>
+                  <span class="mock-swatch" style="background:#5b4636"></span>
+                  <span class="mock-swatch" style="background:#2c2320"></span>
+                  <span class="mock-swatch" style="background:#f3ede4"></span>
+                </div>
+              </div>
+              <div class="mock-look-row">
+                <span class="mock-label">Style</span>
+                <p class="mock-style-text">Natural light, 35mm grain, warm neutral grade — quiet and unhurried.</p>
+              </div>
+              <div class="mock-look-row">
+                <span class="mock-label">Cast</span>
+                <div class="mock-cast-row">
+                  <span class="mock-avatar"></span>
+                  <span class="mock-avatar"></span>
+                  <span class="mock-avatar mock-avatar-add">+</span>
+                </div>
+              </div>
+              <span class="mock-pill mock-pill-active mock-seed-pill">Seed locked ✓</span>
+            </div>
+
+            <div class="mock mock-board" data-mock="board" hidden>
+              <div class="mock-board-grid">
+                <div class="mock-panel"><span class="mock-panel-img"></span><span class="mock-panel-label">Shot 1 · 3.5s</span></div>
+                <div class="mock-panel"><span class="mock-panel-img"></span><span class="mock-panel-label">Shot 2 · 2.0s</span></div>
+                <div class="mock-panel"><span class="mock-panel-img"></span><span class="mock-panel-label">Shot 3 · 4.0s</span></div>
+                <div class="mock-panel"><span class="mock-panel-img"></span><span class="mock-panel-label">Shot 4 · 2.5s</span></div>
+                <div class="mock-panel"><span class="mock-panel-img"></span><span class="mock-panel-label">Shot 5 · 3.0s</span></div>
+                <div class="mock-panel"><span class="mock-panel-img"></span><span class="mock-panel-label">Shot 6 · 5.0s</span></div>
+              </div>
+              <div class="mock-board-controls">
+                <span class="mock-pill mock-pill-active">▶ Play</span>
+                <span class="mock-pill">Export MP4</span>
+                <span class="mock-pill">Export Pitch PDF</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -132,5 +226,28 @@
   </footer>
 
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script>
+    (function () {
+      var workflow = document.querySelector("[data-workflow]");
+      if (!workflow) return;
+      var tabs = workflow.querySelectorAll(".workflow-tab");
+      tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          var target = tab.getAttribute("data-tab");
+          tabs.forEach(function (t) {
+            var isActive = t === tab;
+            t.classList.toggle("is-active", isActive);
+            t.setAttribute("aria-selected", String(isActive));
+          });
+          workflow.querySelectorAll("[data-detail]").forEach(function (el) {
+            el.hidden = el.getAttribute("data-detail") !== target;
+          });
+          workflow.querySelectorAll("[data-mock]").forEach(function (el) {
+            el.hidden = el.getAttribute("data-mock") !== target;
+          });
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
