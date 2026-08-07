@@ -36,9 +36,19 @@ phases:
   navigation, not a cross-project asset browser — the spec permanently
   rules out asset-management-style features.
 - Projects can be deleted from the Projects list (with a confirmation
-  prompt). Cascades to territories/look profiles/beats/panels via existing
-  FK `on delete cascade`; Storage files (reference images, panel images, VO
-  audio) are *not* cleaned up on delete — a known gap, not a bug.
+  prompt), which now calls `api/delete-project.ts` instead of deleting the
+  row directly. DB rows still cascade via FK `on delete cascade`; Storage
+  files don't get that for free (Postgres cascade doesn't touch Storage),
+  so the endpoint walks each territory's `${user_id}/${territory_id}/`
+  prefix across the `panels`, `audio`, and `references` buckets and
+  removes them before deleting the project row. Runs under the
+  service-role key, so it isn't blocked by the RLS delete gotcha noted
+  above.
+- Regenerating a panel (`api/panel.ts`) inserts a fresh `panels` row and a
+  new Storage blob per attempt rather than overwriting in place, so past
+  attempts for the same beat are cleaned up right after a new one finishes
+  successfully — a failed regenerate leaves the last good panel untouched,
+  since cleanup only runs in the success path.
 - Voice selection for VO on the Board page (curated shortlist in
   `src/lib/voices.ts`), a script-only PDF export on the Beats page, and a
   dark slate/navy theme throughout.

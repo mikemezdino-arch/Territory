@@ -188,11 +188,12 @@ The work that turns "works when I test it" into "safe to leave running."
 Vercel; vendor dashboards for Anthropic, fal.ai, ElevenLabs, Supabase, Vercel.
 
 **Action items**
-- Storage lifecycle: delete the previous panel/VO blob on regenerate, and
-  cascade-delete a project's Storage objects on project delete (both
-  documented gaps in the README). At ~500KB/panel and 14 panels/project,
-  unpruned regenerations hit Supabase Pro's 100GB cap around ~7,000
-  projects — closer than it looks once real users iterate on boards.
+- ✅ Storage lifecycle: `api/panel.ts` now deletes the previous panel row +
+  blob for a beat once a regenerate succeeds, and a new
+  `api/delete-project.ts` walks all three Storage buckets before deleting
+  a project (see README). VO blobs were never unbounded to begin with —
+  the path is keyed by voice id, so switching voices tops out at one blob
+  per distinct voice ever used on a territory, not one per generation.
 - Turn on Vercel's built-in Firewall (WAF + rate limiting, included in
   Pro) and tune its managed rules — ahead of Supabase's own auth rate
   limits, not instead of them. Standalone Cloudflare proxying isn't
