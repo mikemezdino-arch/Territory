@@ -532,9 +532,18 @@ redoing it later, so it's worth the wait)
 - ⬜ Set `APP_URL` in `.env.local` (`http://localhost:5173` for local
   testing)
 - ⬜ File the copyright registration (source code + marketing site
-  content) and the trademark application for "Territory" — both under the
-  LLC as owner; get the attorney's help on the trademark clearance search
-  specifically (see Operations → Copyright and trademark above)
+  content) under the LLC as owner (see Operations → Copyright and
+  trademark above)
+- ⬜ Trademark "Territory" — get the attorney's help on the clearance
+  search first (it's a common English word, worth the fee to check before
+  filing), then file the USPTO application with the LLC as owner
+- ⬜ Write the Terms of Service, naming the LLC as the contracting party,
+  and add a `/terms` page to the app (footer link + route)
+- ⬜ Write the Privacy Policy, naming the LLC as the contracting party,
+  and add a `/privacy` page to the app (footer link + route) — cover what
+  Territory actually collects/stores: Supabase-hosted user data, uploaded
+  reference images, generated panels/audio, and usage sent to Anthropic/
+  fal.ai/ElevenLabs as sub-processors
 
 **Not legally blocked, just bundled with Phase 6 launch** — fine to do
 earlier if you want to get ahead of it
