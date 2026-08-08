@@ -132,13 +132,13 @@ React 18 + Vite + TypeScript on the frontend, React Router for `/login`,
 auth (magic link), Postgres storage with row-level security, and Storage for
 reference images, generated panels, and VO audio. fal.ai for image
 generation, ElevenLabs for TTS, ffmpeg.wasm + jsPDF for client-side export.
-Nine Vercel serverless functions — `api/territory.ts`, `api/beats.ts`,
+Ten Vercel serverless functions — `api/territory.ts`, `api/beats.ts`,
 `api/panel.ts`, `api/upload-reference.ts`, `api/territory-analyze.ts`,
 `api/vo.ts`, `api/checkout.ts`, `api/stripe-webhook.ts`,
-`api/billing-portal.ts` — call the vendor APIs and write results to the
-database; vendor keys and the Supabase service-role key only ever live
-there, never in the browser. Stripe for billing (Checkout, webhook,
-customer billing portal).
+`api/billing-portal.ts`, `api/delete-project.ts` — call the vendor APIs
+and write results to the database; vendor keys and the Supabase
+service-role key only ever live there, never in the browser. Stripe for
+billing (Checkout, webhook, customer billing portal).
 
 ## Setup
 
@@ -267,6 +267,26 @@ territory, not once per export.
    `stripe listen` terminal — it logs every event it forwards and the
    response your endpoint returned, which is the fastest way to see
    whether the webhook actually processed something or silently no-opped.
+
+### Phase 7 setup — Sentry
+
+Optional, and safe to skip — every `/api/*` route and the client's
+top-level error boundary already call into Sentry, but it's a no-op
+until a DSN is set.
+
+1. Create a free project at [sentry.io](https://sentry.io) (platform:
+   JavaScript or React — either works, this app sends both client and
+   server events to the same project).
+2. Copy its DSN into both `SENTRY_DSN` and `VITE_SENTRY_DSN`. Unlike the
+   other keys in this file, a DSN is meant to be public — it can only
+   submit new events, not read or modify anything in your account — so
+   there's no extra care needed handling it versus, say, `STRIPE_SECRET_KEY`.
+3. That's it. Client-side render crashes now show a themed fallback
+   screen instead of a blank white page, and every route's existing catch
+   block also reports to Sentry alongside its `console.error` call. The
+   one deliberate exception: the Stripe webhook's signature-verification
+   failures aren't reported, since that fires on every bot that probes
+   the endpoint and would just be alert noise, not a real signal.
 
 ### Signature verification needs the raw request body, not the parsed one
 
@@ -440,3 +460,13 @@ shared app-wide via `PlanProvider`. **Manage billing** on that same page
 opens a real Stripe billing portal session; canceling there should leave
 Studio access intact until `current_period_end`, not revoke it
 immediately.
+
+## Phase 7 checkpoint
+
+With `SENTRY_DSN`/`VITE_SENTRY_DSN` set (see "Phase 7 setup — Sentry"
+above): trigger any `/api/*` failure (easiest is a bad `STRIPE_SECRET_KEY`
+temporarily, or just hit an endpoint with a malformed request) and confirm
+it shows up in the Sentry project within a few seconds. On the client,
+temporarily throw inside a component's render to confirm the themed
+"Something Went Wrong" screen replaces a blank crash, and that the error
+also lands in Sentry.

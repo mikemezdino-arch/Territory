@@ -3,6 +3,7 @@ import { fal } from "@fal-ai/client";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { checkAndIncrementUsage } from "./_lib/creditCap";
 import { isUserOnFreePlan } from "./_lib/plan";
+import { captureError } from "./_lib/sentry";
 
 // Best-effort default model ids — fal.ai's catalog moves fast, so these are
 // overridable via env without a code change if they drift.
@@ -79,14 +80,20 @@ async function deleteStalePanels(supabase: SupabaseClient, beatId: string, keepP
     .map((url) => url.split(PANELS_BUCKET_PREFIX)[1]);
   if (paths.length > 0) {
     const { error: removeError } = await supabase.storage.from("panels").remove(paths);
-    if (removeError) console.error("failed to remove stale panel blobs", removeError);
+    if (removeError) {
+      console.error("failed to remove stale panel blobs", removeError);
+      captureError(removeError, { route: "panel", stage: "remove-stale-blobs" });
+    }
   }
 
   const { error: deleteError } = await supabase
     .from("panels")
     .delete()
     .in("id", stale.map((p) => p.id));
-  if (deleteError) console.error("failed to remove stale panel rows", deleteError);
+  if (deleteError) {
+    console.error("failed to remove stale panel rows", deleteError);
+    captureError(deleteError, { route: "panel", stage: "remove-stale-rows" });
+  }
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -185,6 +192,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .single();
   if (panelInsertError) {
     console.error("panel row creation failed", panelInsertError);
+    captureError(panelInsertError, { route: "panel", stage: "insert" });
     res.status(502).json({ error: "Failed to start panel generation. Please retry." });
     return;
   }
@@ -227,6 +235,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(200).json({ panel: updatedPanel });
   } catch (err) {
     console.error("panel generation failed", err);
+    captureError(err, { route: "panel", beatId });
     await supabase.from("panels").update({ status: "failed" }).eq("id", panel.id);
     res.status(502).json({ error: "Panel generation failed. Please retry." });
   }

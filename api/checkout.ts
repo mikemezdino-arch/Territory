@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
+import { captureError } from "./_lib/sentry";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
@@ -66,6 +67,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(200).json({ url: session.url });
   } catch (err) {
     console.error("checkout session creation failed", err);
+    captureError(err, { route: "checkout" });
     res.status(502).json({ error: "Could not start checkout. Please retry." });
   }
 }

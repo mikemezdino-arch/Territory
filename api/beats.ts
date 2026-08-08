@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { buildLookProfileBlock, FORMAT_BEAT_COUNT, FORMAT_SECONDS, type BeatLLMResponse } from "../src/types";
 import { stripCodeFences } from "./_lib/parsing";
 import { checkAndIncrementUsage } from "./_lib/creditCap";
+import { captureError } from "./_lib/sentry";
 
 const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-4-5-20250929";
 const DURATION_TOLERANCE_SECONDS = 0.5;
@@ -211,6 +212,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { error: deleteError } = await supabase.from("beats").delete().eq("territory_id", territoryId);
     if (deleteError) {
       console.error("beat delete failed", deleteError);
+      captureError(deleteError, { route: "beats", stage: "delete" });
       res.status(502).json({ error: "Failed to clear the previous beat sheet. Please retry." });
       return;
     }
@@ -218,6 +220,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { data: inserted, error: insertError } = await supabase.from("beats").insert(rows).select();
     if (insertError) {
       console.error("beat insert failed", insertError);
+      captureError(insertError, { route: "beats", stage: "insert" });
       res.status(502).json({ error: "Beats were generated but failed to save. Please retry." });
       return;
     }
@@ -225,6 +228,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(200).json({ beats: inserted });
   } catch (err) {
     console.error("beat generation failed", err);
+    captureError(err, { route: "beats" });
     res.status(502).json({ error: "Beat sheet generation failed. Please retry." });
   }
 }

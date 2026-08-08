@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
+import { captureError } from "./_lib/sentry";
 
 // Storage objects aren't covered by Postgres' `on delete cascade` — only DB
 // rows are. Every generation endpoint writes to one of these three buckets
@@ -61,6 +62,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .eq("project_id", projectId);
   if (territoriesError) {
     console.error("failed to list territories for storage cleanup", territoriesError);
+    captureError(territoriesError, { route: "delete-project", stage: "list-territories" });
     res.status(502).json({ error: "Failed to delete project. Please retry." });
     return;
   }
@@ -77,6 +79,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // blob is a Storage-quota nuisance, not a correctness problem, and
         // the alternative (aborting) leaves the project undeletable.
         console.error(`failed to remove ${bucket} objects for territory ${territory.id}`, removeError);
+        captureError(removeError, { route: "delete-project", stage: "storage-remove", bucket, territoryId: territory.id });
       }
     }
   }
@@ -88,6 +91,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .select();
   if (deleteError || !deleted || deleted.length === 0) {
     console.error("project delete failed", deleteError);
+    captureError(deleteError ?? new Error("project delete matched zero rows"), { route: "delete-project", stage: "delete" });
     res.status(502).json({ error: "Failed to delete project. Please retry." });
     return;
   }

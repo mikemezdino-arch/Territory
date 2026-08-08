@@ -201,7 +201,15 @@ Vercel; vendor dashboards for Anthropic, fal.ai, ElevenLabs, Supabase, Vercel.
   is hosted), and Vercel's Firewall already covers this threat profile.
   Registering the domain at Cloudflare for its at-cost pricing is still
   fine — just skip turning on its proxy/WAF.
-- Error tracking (Sentry or equivalent) on both the client and `/api/*`
+- ✅ Error tracking: `@sentry/react` on the client (top-level
+  `ErrorBoundary` in `main.tsx` with a themed fallback screen instead of a
+  blank crash) and `@sentry/node` across every `/api/*` route via a shared
+  `api/_lib/sentry.ts` helper, called from each route's existing catch
+  blocks alongside `console.error`. Deliberately skips the Stripe
+  webhook's signature-verification failures — that fires on every bot
+  probing the endpoint and would just be noise, not signal. Safe no-op
+  until `SENTRY_DSN`/`VITE_SENTRY_DSN` are set (see `.env.local.example`)
+  — create the free Sentry project and set those to actually turn it on
 - Per-vendor spend alerts (Anthropic, fal.ai, ElevenLabs) before paid
   signups open, so a bug can't produce a surprise bill — see below for
   what each vendor actually offers, checked live August 2026
@@ -517,6 +525,12 @@ needs to be redone by waiting.
   Supabase SQL Editor. Without it, the palette-color swatch UI on
   `/app/p/:id/t/:territoryId/look` will fail to save (the `palette_colors`
   column won't exist yet).
+
+**Not blocked at all — needed to actually turn on error tracking**
+- ⬜ Create a free project at [sentry.io](https://sentry.io) (JavaScript or
+  React platform), copy its DSN into `SENTRY_DSN` and `VITE_SENTRY_DSN` in
+  `.env.local` and in Vercel's env vars, then redeploy. The integration
+  code is already live and safely no-opping — this is the only step left.
 
 **Genuinely blocked on: LLC processed + EIN issued** (Stripe accounts
 under a business name need the EIN; opening it personally now just means

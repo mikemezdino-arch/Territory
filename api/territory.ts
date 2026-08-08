@@ -5,6 +5,7 @@ import type { Brief, TerritoryLLMResponse } from "../src/types";
 import { stripCodeFences } from "./_lib/parsing";
 import { checkAndIncrementUsage } from "./_lib/creditCap";
 import { isTerritoryShape } from "./_lib/territoryShape";
+import { captureError } from "./_lib/sentry";
 
 const SYSTEM_PROMPT = `You are a senior creative director running a pitch war-room. Given a brief,
 produce 3 deliberately DIFFERENT campaign territories for a client pitch.
@@ -161,6 +162,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const { data: inserted, error: insertError } = await supabase.from("territories").insert(rows).select();
     if (insertError) {
       console.error("territory insert failed", insertError);
+      captureError(insertError, { route: "territory", stage: "insert" });
       res.status(502).json({ error: "Territories were generated but failed to save. Please retry." });
       return;
     }
@@ -168,6 +170,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(200).json({ territories: inserted });
   } catch (err) {
     console.error("territory generation failed", err);
+    captureError(err, { route: "territory" });
     res.status(502).json({ error: "Territory generation failed. Please retry." });
   }
 }

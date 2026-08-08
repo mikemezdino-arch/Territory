@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { checkAndIncrementUsage } from "./_lib/creditCap";
 import { VOICE_OPTIONS } from "../src/lib/voices";
 import type { DbBeat } from "../src/types";
+import { captureError } from "./_lib/sentry";
 
 // Default voice/model. "Eric" is one of the curated American-accent premade
 // voices in src/lib/voices.ts (confirmed live via GET /v1/voices — accent
@@ -137,6 +138,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!ttsRes.ok) {
       const errBody = await ttsRes.text();
       console.error("ElevenLabs TTS failed", ttsRes.status, errBody);
+      captureError(new Error(`ElevenLabs TTS failed: ${ttsRes.status}`), { route: "vo", status: ttsRes.status, body: errBody });
       res.status(502).json({ error: "Voiceover generation failed. Please retry." });
       return;
     }
@@ -165,6 +167,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(200).json({ vo_url: publicUrlData.publicUrl, voice_id: effectiveVoiceId });
   } catch (err) {
     console.error("voiceover generation failed", err);
+    captureError(err, { route: "vo", territoryId });
     res.status(502).json({ error: "Voiceover generation failed. Please retry." });
   }
 }

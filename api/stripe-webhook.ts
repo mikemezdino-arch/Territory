@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
+import { captureError } from "./_lib/sentry";
 
 // Required for signature verification: constructEvent needs the exact raw
 // bytes Stripe signed, not a JSON.parse/re-stringify round-trip (which
@@ -85,6 +86,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             custId,
             subscriptionId,
           });
+          captureError(new Error("checkout.session.completed missing expected fields"), {
+            route: "stripe-webhook",
+            userId,
+            custId,
+            subscriptionId,
+          });
           break;
         }
 
@@ -151,6 +158,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(200).json({ received: true });
   } catch (err) {
     console.error("stripe webhook handling failed", err);
+    captureError(err, { route: "stripe-webhook", eventType: event.type });
     res.status(500).json({ error: "Webhook handling failed." });
   }
 }

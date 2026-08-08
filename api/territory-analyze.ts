@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { stripCodeFences } from "./_lib/parsing";
 import { checkAndIncrementUsage } from "./_lib/creditCap";
 import { isTerritoryShape } from "./_lib/territoryShape";
+import { captureError } from "./_lib/sentry";
 
 const SYSTEM_PROMPT = `You are a senior creative director running a pitch war-room. A team member
 has proposed their OWN campaign territory idea, separate from the ones you
@@ -153,6 +154,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .single();
     if (insertError) {
       console.error("custom territory insert failed", insertError);
+      captureError(insertError, { route: "territory-analyze", stage: "insert" });
       res.status(502).json({ error: "Territory was analyzed but failed to save. Please retry." });
       return;
     }
@@ -160,6 +162,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(200).json({ territory: inserted });
   } catch (err) {
     console.error("custom territory analysis failed", err);
+    captureError(err, { route: "territory-analyze" });
     res.status(502).json({ error: "Territory analysis failed. Please retry." });
   }
 }

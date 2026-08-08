@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
+import { captureError } from "./_lib/sentry";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -89,6 +90,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   });
   if (uploadError) {
     console.error("reference upload failed", uploadError);
+    captureError(uploadError, { route: "upload-reference" });
     res.status(502).json({ error: "Upload failed. Please retry." });
     return;
   }
